@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 interface Props{
    id: string;
-   currentUser: string;
+   currentUserId: string;
     parentId: string;
     content: string;
     author: {
@@ -27,7 +27,7 @@ interface Props{
 }
 
 const ThreadCard =  ({
-    id, currentUser, parentId, content, author, community, createdAt, comments, isComments
+    id, currentUserId, parentId, content, author, community, createdAt, comments, isComments
 }: Props) => {
    <article className={`flex w-full flex-col rounded-xl ${isComments ? 'px-0 xs:px-7' : 'bg-dark-2 p-7'}`}>
     <div className="flex items-start justify-between">
