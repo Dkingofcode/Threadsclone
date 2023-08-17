@@ -2,6 +2,8 @@ import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchUser } from "@/lib/actions/user.actions"; 
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { fetchthreadById } from "@/lib/actions/thread.actions";
+import Comment from "@/components/forms/Comment";
 
 
 const Page = async ({ params }: { params: {id: string }}) => {
@@ -13,22 +15,47 @@ const Page = async ({ params }: { params: {id: string }}) => {
    const userInfo = await fetchUser(user.id);
    if(!userInfo?.onboarded) redirect('/onboarding')
 
-   const thread = await fetchThreadById(params.id);
+   const thread = await fetchthreadById(params.id);
 
-     return  ( 
+  return  ( 
    <section className="relative">
        <div>
        <ThreadCard  
-          key={post._id}
-          id={post._id}
+          key={thread._id}
+          id={thread._id}
           currentUserId={user?.id || ""}
-          parentId={post.parentId}
-          content={post.text}
-          author={post.author}
-          community={post.community}
-          createdAt={post.createdAt}
-          comments={post.children}
+          parentId={thread.parentId}
+          content={thread.text}
+          author={thread.author}
+          community={thread.community}
+          createdAt={thread.createdAt}
+          comments={thread.children}
             />
+       </div>
+
+       <div className="mt-7">
+        <Comment 
+          threadId={thread.id}  
+          currentUserImg = {userInfo.imageUrl}
+          currentUserId={JSON.stringify(userInfo._id)}
+        /> 
+       </div>
+
+       <div className="mt-10">
+          {thread.children.map((childItem: any) => (
+          <ThreadCard  
+            key={childItem._id}
+            id={childItem._id}
+            currentUserId={childItem?.id || ""}
+            parentId={childItem.parentId}
+            content={childItem.text}
+            author={childItem.author}
+            community={childItem.community}
+            createdAt={childItem.createdAt}
+            comments={childItem.children}
+            isComments
+            />
+          ))}
        </div>
     </section>
      )
